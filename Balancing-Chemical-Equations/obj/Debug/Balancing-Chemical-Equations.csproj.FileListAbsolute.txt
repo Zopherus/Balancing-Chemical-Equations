@@ -4,3 +4,9 @@ C:\Users\Eric\Desktop\GitHub\Balancing-Chemical-Equations\Balancing-Chemical-Equ
 C:\Users\Eric\Desktop\GitHub\Balancing-Chemical-Equations\Balancing-Chemical-Equations\obj\Debug\Balancing-Chemical-Equations.csprojResolveAssemblyReference.cache
 C:\Users\Eric\Desktop\GitHub\Balancing-Chemical-Equations\Balancing-Chemical-Equations\obj\Debug\Balancing-Chemical-Equations.exe
 C:\Users\Eric\Desktop\GitHub\Balancing-Chemical-Equations\Balancing-Chemical-Equations\obj\Debug\Balancing-Chemical-Equations.pdb
+C:\Users\1012746\Desktop\Balancing-Chemical-Equations-master\Balancing-Chemical-Equations\bin\Debug\Balancing-Chemical-Equations.exe.config
+C:\Users\1012746\Desktop\Balancing-Chemical-Equations-master\Balancing-Chemical-Equations\obj\Debug\Balancing-Chemical-Equations.exe
+C:\Users\1012746\Desktop\Balancing-Chemical-Equations-master\Balancing-Chemical-Equations\obj\Debug\Balancing-Chemical-Equations.pdb
+C:\Users\1012746\Desktop\Balancing-Chemical-Equations-master\Balancing-Chemical-Equations\bin\Debug\Balancing-Chemical-Equations.exe
+C:\Users\1012746\Desktop\Balancing-Chemical-Equations-master\Balancing-Chemical-Equations\bin\Debug\Balancing-Chemical-Equations.pdb
+C:\Users\1012746\Desktop\Balancing-Chemical-Equations-master\Balancing-Chemical-Equations\obj\Debug\Balancing-Chemical-Equations.csprojResolveAssemblyReference.cache
