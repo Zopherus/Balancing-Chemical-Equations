@@ -10,3 +10,9 @@ C:\Users\1012746\Desktop\Balancing-Chemical-Equations-master\Balancing-Chemical-
 C:\Users\1012746\Desktop\Balancing-Chemical-Equations-master\Balancing-Chemical-Equations\bin\Debug\Balancing-Chemical-Equations.exe
 C:\Users\1012746\Desktop\Balancing-Chemical-Equations-master\Balancing-Chemical-Equations\bin\Debug\Balancing-Chemical-Equations.pdb
 C:\Users\1012746\Desktop\Balancing-Chemical-Equations-master\Balancing-Chemical-Equations\obj\Debug\Balancing-Chemical-Equations.csprojResolveAssemblyReference.cache
+C:\Users\1012746\Desktop\Balancing-Chemical-Equations\Balancing-Chemical-Equations\bin\Debug\Balancing-Chemical-Equations.exe.config
+C:\Users\1012746\Desktop\Balancing-Chemical-Equations\Balancing-Chemical-Equations\obj\Debug\Balancing-Chemical-Equations.exe
+C:\Users\1012746\Desktop\Balancing-Chemical-Equations\Balancing-Chemical-Equations\obj\Debug\Balancing-Chemical-Equations.pdb
+C:\Users\1012746\Desktop\Balancing-Chemical-Equations\Balancing-Chemical-Equations\bin\Debug\Balancing-Chemical-Equations.exe
+C:\Users\1012746\Desktop\Balancing-Chemical-Equations\Balancing-Chemical-Equations\bin\Debug\Balancing-Chemical-Equations.pdb
+C:\Users\1012746\Desktop\Balancing-Chemical-Equations\Balancing-Chemical-Equations\obj\Debug\Balancing-Chemical-Equations.csprojResolveAssemblyReference.cache

@@ -23,9 +23,37 @@ namespace Balancing_Chemical_Equations
 
 			List<string> leftSideTerms = SplitIntoTerms(leftSide);
 			List<string> rightSideTerms = SplitIntoTerms(rightSide);
-			
-            return rightSideTerms.ElementAt(0);
+
+			List<string> elements = FindElements(leftSideTerms);
+			double[,] equationMatrix = new double[leftSideTerms.Count + rightSideTerms.Count + 1, elements.Count];
+
+			for (int x = 0; x < equationMatrix.GetLength(0); x++)
+			{
+				for (int y = 0; y < equationMatrix.GetLength(1); y++)
+				{
+
+				}
+			}
+
+            return "";
         }
+
+		static List<string> FindElements(List<string> terms)
+		{
+			string value = string.Join("", terms);
+			List<string> elements = new List<string>();
+			for (int counter = 0; counter < value.Length; counter++)
+			{
+				if (char.IsUpper(value, counter))
+				{
+					if (char.IsUpper(value, counter + 1))
+						elements.Add(value.Substring(counter, 2));
+					else
+						elements.Add(value.Substring(counter, 1));
+				}
+			}
+			return elements;
+		}
 
 		static List<string> SplitIntoTerms(string equation)
 		{
