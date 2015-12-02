@@ -21,38 +21,39 @@ namespace Balancing_Chemical_Equations
             string leftSide = equation.Substring(0, middle - 1);
             string rightSide = equation.Substring(middle + 3, equation.Length - middle - 3);
 
-			List<string> leftSideTerms = SplitIntoTerms(leftSide);
-			List<string> rightSideTerms = SplitIntoTerms(rightSide);
+			//string[] leftSideTerms = leftSide.Replace(" ", "").Split('+');
+			//string[] rightSideTerms = rightSide.Replace(" ", "").Split('+');
 
-			List<string> elements = FindElements(leftSideTerms);
-			double[,] equationMatrix = new double[leftSideTerms.Count + rightSideTerms.Count + 1, elements.Count];
+			ElementTerm[] leftSideElements = FindElements(leftSide);
+
+			double[,] equationMatrix = new double[leftSideElements.Count + rightSideTerms.Count + 1, elements.Count];
 
 			for (int x = 0; x < equationMatrix.GetLength(0); x++)
 			{
 				for (int y = 0; y < equationMatrix.GetLength(1); y++)
 				{
-
+					
 				}
 			}
 
-            return "";
+			return leftSideTerms[0];
         }
 
-		static List<string> FindElements(List<string> terms)
+		static ElementTerm[] FindElements(string equation)
 		{
-			string value = string.Join("", terms);
-			List<string> elements = new List<string>();
+			string value = equation.Replace(" + ", "");
+			List<ElementTerm> elements = new List<ElementTerm>();
 			for (int counter = 0; counter < value.Length; counter++)
 			{
-				if (char.IsUpper(value, counter))
+				if (char.IsLetter(value, counter))
 				{
-					if (char.IsUpper(value, counter + 1))
-						elements.Add(value.Substring(counter, 2));
+					if (char.IsLower(value, counter + 1))
+						elements.Add(new ElementTerm(0, value.Substring(counter, 2)));
 					else
-						elements.Add(value.Substring(counter, 1));
+						elements.Add(new ElementTerm(0, value.Substring(counter, 1)));
 				}
 			}
-			return elements;
+			return elements.ToArray();
 		}
 
 		static List<string> SplitIntoTerms(string equation)
