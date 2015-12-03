@@ -16,5 +16,10 @@ namespace Balancing_Chemical_Equations
 			this.Coefficient = Coefficient;
 			this.Element = Element;
 		}
+
+        public override string ToString()
+        {
+            return Element + Coefficient.ToString();
+        }
 	}
 }

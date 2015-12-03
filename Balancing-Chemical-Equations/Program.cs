@@ -21,36 +21,55 @@ namespace Balancing_Chemical_Equations
             string leftSide = equation.Substring(0, middle - 1);
             string rightSide = equation.Substring(middle + 3, equation.Length - middle - 3);
 
+           
 			//string[] leftSideTerms = leftSide.Replace(" ", "").Split('+');
 			//string[] rightSideTerms = rightSide.Replace(" ", "").Split('+');
 
 			ElementTerm[] leftSideElements = FindElements(leftSide);
+            ElementTerm[] rightSideElements = FindElements(rightSide);
+			//double[,] equationMatrix = new double[leftSideElements.Count + rightSideTerms.Count + 1, elements.Count];
 
-			double[,] equationMatrix = new double[leftSideElements.Count + rightSideTerms.Count + 1, elements.Count];
+			//for (int x = 0; x < equationMatrix.GetLength(0); x++)
+			//{
+			//	for (int y = 0; y < equationMatrix.GetLength(1); y++)
+			//	{
+			//		
+			//	}
+			//}
 
-			for (int x = 0; x < equationMatrix.GetLength(0); x++)
-			{
-				for (int y = 0; y < equationMatrix.GetLength(1); y++)
-				{
-					
-				}
-			}
-
-			return leftSideTerms[0];
+            return rightSideElements[0].ToString();
         }
 
 		static ElementTerm[] FindElements(string equation)
 		{
-			string value = equation.Replace(" + ", "");
+			equation = equation.Replace(" + ", "");
 			List<ElementTerm> elements = new List<ElementTerm>();
-			for (int counter = 0; counter < value.Length; counter++)
+			for (int counter = 0; counter < equation.Length; counter++)
 			{
-				if (char.IsLetter(value, counter))
+				if (char.IsLetter(equation, counter))
 				{
-					if (char.IsLower(value, counter + 1))
-						elements.Add(new ElementTerm(0, value.Substring(counter, 2)));
-					else
-						elements.Add(new ElementTerm(0, value.Substring(counter, 1)));
+                    if (char.IsLower(equation, counter + 1))
+                    {
+                        string coefficient = "";
+                        int position = counter + 2;
+                        while (position < equation.Length && char.IsNumber(equation.ElementAt(position)) )
+                        {
+                            coefficient += equation.ElementAt(position);
+                            position++;
+                        }
+                        elements.Add(new ElementTerm(int.Parse(coefficient), equation.Substring(counter, 2)));
+                    }
+                    else
+                    {
+                        string coefficient = "";
+                        int position = counter + 1;
+                        while (position < equation.Length && char.IsNumber(equation.ElementAt(position)))
+                        {
+                            coefficient += equation.ElementAt(position);
+                            position++;
+                        }
+                        elements.Add(new ElementTerm(int.Parse(coefficient), equation.Substring(counter, 1)));
+                    }
 				}
 			}
 			return elements.ToArray();
