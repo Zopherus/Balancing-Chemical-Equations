@@ -10,16 +10,24 @@ namespace Balancing_Chemical_Equations
 	{
 		public int Coefficient { get; private set; }
 		public string Element { get; private set; }
+		public int Position { get; private set; }
 
-		public ElementTerm(int Coefficient, string Element)
+		public ElementTerm(int Coefficient, string Element, int Position)
 		{
 			this.Coefficient = Coefficient;
 			this.Element = Element;
+			this.Position = Position;
 		}
 
         public override string ToString()
         {
-            return Element + Coefficient.ToString();
+			string coefficient = "";
+			if (Coefficient != 0)
+			{
+				coefficient = Coefficient.ToString();
+			}
+
+			return Element + coefficient;
         }
 	}
 }

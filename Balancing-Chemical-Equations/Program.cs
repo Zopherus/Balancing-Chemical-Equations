@@ -21,13 +21,16 @@ namespace Balancing_Chemical_Equations
             string leftSide = equation.Substring(0, middle - 1);
             string rightSide = equation.Substring(middle + 3, equation.Length - middle - 3);
 
-           
-			//string[] leftSideTerms = leftSide.Replace(" ", "").Split('+');
-			//string[] rightSideTerms = rightSide.Replace(" ", "").Split('+');
+			Term[] leftSideTerms = FindTerms(leftSide);
+			Term[] rightSideTerms = FindTerms(rightSide);
 
-			ElementTerm[] leftSideElements = FindElements(leftSide);
-            ElementTerm[] rightSideElements = FindElements(rightSide);
-			//double[,] equationMatrix = new double[leftSideElements.Count + rightSideTerms.Count + 1, elements.Count];
+			ElementTerm[] leftSideElements = FindElements(leftSideTerms);
+            ElementTerm[] rightSideElements = FindElements(rightSideTerms);
+
+			List<string> elements = new List<string>();
+
+
+			double[,] equationMatrix = new double[leftSideElements.Count() + rightSideElements.Count() + 1, elements.Count];
 
 			//for (int x = 0; x < equationMatrix.GetLength(0); x++)
 			//{
@@ -37,39 +40,55 @@ namespace Balancing_Chemical_Equations
 			//	}
 			//}
 
-            return rightSideElements[0].ToString();
+            return leftSideElements[0].ToString();
         }
 
-		static ElementTerm[] FindElements(string equation)
+		static Term[] FindTerms(string equation)
 		{
-			equation = equation.Replace(" + ", "");
-			List<ElementTerm> elements = new List<ElementTerm>();
-			for (int counter = 0; counter < equation.Length; counter++)
+			string[] terms = equation.Split('+');
+			List<Term> termList = new List<Term>();
+			for (int counter = 0; counter < terms.Length; counter++)
 			{
-				if (char.IsLetter(equation, counter))
+				termList.Add(new Term(terms[counter].Trim(), counter));
+			}
+			return termList.ToArray();
+		}
+
+		static ElementTerm[] FindElements(Term[] terms)
+		{
+			List<ElementTerm> elements = new List<ElementTerm>();
+			for (int termPosition = 0; termPosition < terms.Length; termPosition++)
+			{
+				string term = terms[termPosition].term;
+				for (int counter = 0; counter < term.Length; counter++)
 				{
-                    if (char.IsLower(equation, counter + 1))
-                    {
-                        string coefficient = "";
-                        int position = counter + 2;
-                        while (position < equation.Length && char.IsNumber(equation.ElementAt(position)) )
-                        {
-                            coefficient += equation.ElementAt(position);
-                            position++;
-                        }
-                        elements.Add(new ElementTerm(int.Parse(coefficient), equation.Substring(counter, 2)));
-                    }
-                    else
-                    {
-                        string coefficient = "";
-                        int position = counter + 1;
-                        while (position < equation.Length && char.IsNumber(equation.ElementAt(position)))
-                        {
-                            coefficient += equation.ElementAt(position);
-                            position++;
-                        }
-                        elements.Add(new ElementTerm(int.Parse(coefficient), equation.Substring(counter, 1)));
-                    }
+					if (char.IsLetter(term, counter))
+					{
+						if (counter + 1 < term.Length && char.IsLower(term, counter + 1))
+						{
+							string coefficient = "0";
+							int position = counter + 2;
+							while (position < term.Length && char.IsNumber(term.ElementAt(position)))
+							{
+								coefficient += term.ElementAt(position);
+								position++;
+							}
+							elements.Add(new ElementTerm(int.Parse(coefficient), term.Substring(counter, 2), termPosition));
+							counter = position - 1;
+						}
+						else
+						{
+							string coefficient = "0";
+							int position = counter + 1;
+							while (position < term.Length && char.IsNumber(term.ElementAt(position)))
+							{
+								coefficient += term.ElementAt(position);
+								position++;
+							}
+							elements.Add(new ElementTerm(int.Parse(coefficient), term.Substring(counter, 1), termPosition));
+							counter = position - 1;
+						}
+					}
 				}
 			}
 			return elements.ToArray();
