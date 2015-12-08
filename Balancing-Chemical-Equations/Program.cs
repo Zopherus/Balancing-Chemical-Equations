@@ -27,20 +27,63 @@ namespace Balancing_Chemical_Equations
 			ElementTerm[] leftSideElements = FindElements(leftSideTerms);
             ElementTerm[] rightSideElements = FindElements(rightSideTerms);
 
-			List<string> elements = new List<string>();
+            string[] uniqueElements = FindUniqueElements(leftSide, rightSide);
 
 
-			double[,] equationMatrix = new double[leftSideElements.Count() + rightSideElements.Count() + 1, elements.Count];
+			double[,] equationMatrix = new double[leftSideElements.Count() + rightSideElements.Count() + 1, uniqueElements.Length];
 
-			//for (int x = 0; x < equationMatrix.GetLength(0); x++)
-			//{
-			//	for (int y = 0; y < equationMatrix.GetLength(1); y++)
-			//	{
-			//		
-			//	}
-			//}
+			for (int x = 0; x < equationMatrix.GetLength(0); x++)
+			{
+				for (int y = 0; y < equationMatrix.GetLength(1); y++)
+				{
+					if (x < leftSideElements.Count())
+                    {
+                        equationMatrix[x, y] = leftSideElements[x].Coefficient;
+                    }
+                    else
+                    {
+                        equationMatrix[x, y] = -rightSideElements[x - leftSideElements.Count()].Coefficient;
+                    }
+				}
+			}
 
-            return leftSideElements[0].ToString();
+            ReducedRowEchelonForm(equationMatrix);
+
+            return ToString(equationMatrix);
+        }
+
+        static string[] FindUniqueElements(string leftSide, string rightSide)
+        {
+            List<string> leftSideElements = new List<string>();
+            for (int counter = 0; counter < leftSide.Length; counter++)
+            {
+                if (char.IsUpper(leftSide, counter))
+                {
+                    if (char.IsLower(leftSide, counter + 1))
+                        leftSideElements.Add(leftSide.Substring(counter, 2));
+                    else
+                        leftSideElements.Add(leftSide.Substring(counter, 1));
+                }
+            }
+            leftSideElements = leftSideElements.Distinct().ToList();
+
+            List<string> rightSideElements = new List<string>();
+            for (int counter = 0; counter < rightSide.Length; counter++)
+            {
+                if (char.IsUpper(rightSide, counter))
+                {
+                    if (char.IsLower(rightSide, counter + 1))
+                        rightSideElements.Add(rightSide.Substring(counter, 2));
+                    else
+                        rightSideElements.Add(rightSide.Substring(counter, 1));
+                }
+            }
+            rightSideElements = rightSideElements.Distinct().ToList();
+
+            if (rightSideElements.OrderBy(i => i).SequenceEqual(leftSideElements.OrderBy(i => i)))
+                return leftSideElements.ToArray();
+            else
+                return null;
         }
 
 		static Term[] FindTerms(string equation)
@@ -56,13 +99,14 @@ namespace Balancing_Chemical_Equations
 
 		static ElementTerm[] FindElements(Term[] terms)
 		{
+            // I actually do not know how this works or how I wrote it, but it works so
 			List<ElementTerm> elements = new List<ElementTerm>();
 			for (int termPosition = 0; termPosition < terms.Length; termPosition++)
 			{
 				string term = terms[termPosition].term;
 				for (int counter = 0; counter < term.Length; counter++)
 				{
-					if (char.IsLetter(term, counter))
+					if (char.IsUpper(term, counter))
 					{
 						if (counter + 1 < term.Length && char.IsLower(term, counter + 1))
 						{
