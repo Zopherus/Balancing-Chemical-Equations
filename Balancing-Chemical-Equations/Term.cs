@@ -17,5 +17,10 @@ namespace Balancing_Chemical_Equations
 			this.term = term;
 			this.Position = Position;
 		}
+
+		public override string ToString()
+		{
+			return term;
+		}
 	}
 }

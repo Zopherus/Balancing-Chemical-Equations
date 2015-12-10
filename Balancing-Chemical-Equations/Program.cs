@@ -27,30 +27,29 @@ namespace Balancing_Chemical_Equations
 			ElementTerm[] leftSideElements = FindElements(leftSideTerms);
             ElementTerm[] rightSideElements = FindElements(rightSideTerms);
 
-            //string[] uniqueElements = FindUniqueElements(leftSide, rightSide);
+            string[] uniqueElements = FindUniqueElements(leftSide, rightSide);
 
 
-			/*double[,] equationMatrix = new double[leftSideElements.Count() + rightSideElements.Count() + 1, uniqueElements.Length];
+			double[,] equationMatrix = new double[uniqueElements.Length , leftSideElements.Count() + rightSideElements.Count() + 1];
 
-			for (int x = 0; x < equationMatrix.GetLength(0); x++)
+			for (int y = 0; y < equationMatrix.GetLength(0); y++)
 			{
-				for (int y = 0; y < equationMatrix.GetLength(1); y++)
+				for (int x = 0; x < equationMatrix.GetLength(1) - 1; x++)
 				{
 					if (x < leftSideElements.Count())
                     {
-                        equationMatrix[x, y] = leftSideElements[x].Coefficient;
+						equationMatrix[y, x] = leftSideElements[x].Coefficient;
                     }
                     else
                     {
-                        equationMatrix[x, y] = -rightSideElements[x - leftSideElements.Count()].Coefficient;
+						equationMatrix[y, x] = -rightSideElements[x - leftSideElements.Count()].Coefficient;
                     }
 				}
 			}
 
-            ReducedRowEchelonForm(equationMatrix);
+            //ReducedRowEchelonForm(equationMatrix);
 
-            return ToString(equationMatrix);*/
-            return leftSideElements[1].ToString();
+            return ToString(equationMatrix);
         }
 
         static string[] FindUniqueElements(string leftSide, string rightSide)
@@ -60,7 +59,7 @@ namespace Balancing_Chemical_Equations
             {
                 if (char.IsUpper(leftSide, counter))
                 {
-                    if (char.IsLower(leftSide, counter + 1))
+					if (counter + 1 < leftSide.Length && char.IsLower(leftSide, counter + 1))
                         leftSideElements.Add(leftSide.Substring(counter, 2));
                     else
                         leftSideElements.Add(leftSide.Substring(counter, 1));
@@ -73,7 +72,7 @@ namespace Balancing_Chemical_Equations
             {
                 if (char.IsUpper(rightSide, counter))
                 {
-                    if (char.IsLower(rightSide, counter + 1))
+                    if (counter + 1 < rightSide.Length && char.IsLower(rightSide, counter + 1))
                         rightSideElements.Add(rightSide.Substring(counter, 2));
                     else
                         rightSideElements.Add(rightSide.Substring(counter, 1));
@@ -110,7 +109,7 @@ namespace Balancing_Chemical_Equations
 			for (int termPosition = 0; termPosition < terms.Length; termPosition++)
 			{
 				string term = terms[termPosition].term;
-
+				 
                 // Loop through each character of the string of the term
 				for (int counter = 0; counter < term.Length; counter++)
 				{
@@ -124,7 +123,7 @@ namespace Balancing_Chemical_Equations
                             // Calculate the coefficient of the element by starting with a 0
 							string coefficient = "0";
 							int position = counter + 2;
-                            // Continue adding on numbers
+                            // While the next character is a number and haven't hit end of string yet
 							while (position < term.Length && char.IsNumber(term.ElementAt(position)))
 							{
                                 // Add each digit onto the coefficient string
@@ -135,27 +134,41 @@ namespace Balancing_Chemical_Equations
 							}
 
                             // Add a new element with the calculated coefficient, element symbol and use the position of the term as the position for the element
-							elements.Add(new ElementTerm(int.Parse(coefficient), term.Substring(counter, 2), termPosition));
+							ElementTerm elementAdd = new ElementTerm(int.Parse(coefficient), term.Substring(counter, 2), termPosition);
+							elements.Add(elementAdd);
 
-
-                            counter = position - 1;
+							// Make the next character to check, the position after all the numbers
+							// Need to decrease by one since for loop will increment counter by 1
+							counter = position - 1;
 						}
                         // else the element is only one letter long
 						else
 						{
+							// Calculate the coefficient of the element by starting with a 0
 							string coefficient = "0";
 							int position = counter + 1;
+							// While the next character is a number and haven't hit end of string yet
 							while (position < term.Length && char.IsNumber(term.ElementAt(position)))
 							{
+								// Add each digit onto the coefficient string
 								coefficient += term.ElementAt(position);
+
+								// Move onto the next character
 								position++;
 							}
-							elements.Add(new ElementTerm(int.Parse(coefficient), term.Substring(counter, 1), termPosition));
-                            counter = position;
+
+							// Add a new element with the calculated coefficient, element symbol and use the position of the term as the position for the element
+							ElementTerm elementAdd = new ElementTerm(int.Parse(coefficient), term.Substring(counter, 1), termPosition);
+							elements.Add(elementAdd);
+
+							// Make the next character to check, the position after all the numbers
+							// Need to decrease by one since for loop will increment counter by 1
+							counter = position;
 						}
 					}
 				}
 			}
+			//Return the array of elements
 			return elements.ToArray();
 		}
 
@@ -232,12 +245,12 @@ namespace Balancing_Chemical_Equations
 		static string ToString(double[,] grid)
 		{
 			string result = "";
-			for (int x = 0; x < grid.GetLength(0); x++)
+			for (int y = 0; y < grid.GetLength(0); y++)
 			{
-				for (int y = 0; y < grid.GetLength(1); y++)
+				for (int x = 0; x < grid.GetLength(1); x++ )
 				{
-					result += grid[x, y].ToString();
-					if (y != grid.GetLength(1) - 1)
+					result += grid[y, x].ToString();
+					if (x != grid.GetLength(1) - 1)
 						result += ",";
 				}
 				result += "\n";
