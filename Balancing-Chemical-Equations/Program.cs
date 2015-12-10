@@ -27,10 +27,10 @@ namespace Balancing_Chemical_Equations
 			ElementTerm[] leftSideElements = FindElements(leftSideTerms);
             ElementTerm[] rightSideElements = FindElements(rightSideTerms);
 
-            string[] uniqueElements = FindUniqueElements(leftSide, rightSide);
+            //string[] uniqueElements = FindUniqueElements(leftSide, rightSide);
 
 
-			double[,] equationMatrix = new double[leftSideElements.Count() + rightSideElements.Count() + 1, uniqueElements.Length];
+			/*double[,] equationMatrix = new double[leftSideElements.Count() + rightSideElements.Count() + 1, uniqueElements.Length];
 
 			for (int x = 0; x < equationMatrix.GetLength(0); x++)
 			{
@@ -49,7 +49,8 @@ namespace Balancing_Chemical_Equations
 
             ReducedRowEchelonForm(equationMatrix);
 
-            return ToString(equationMatrix);
+            return ToString(equationMatrix);*/
+            return leftSideElements[1].ToString();
         }
 
         static string[] FindUniqueElements(string leftSide, string rightSide)
@@ -100,26 +101,46 @@ namespace Balancing_Chemical_Equations
 		static ElementTerm[] FindElements(Term[] terms)
 		{
             // I actually do not know how this works or how I wrote it, but it works so
+            // Let's figure out how this works
+
+            // Create a list of elements that will have the elements added to it as we pass through the terms
 			List<ElementTerm> elements = new List<ElementTerm>();
+
+            // Loop through each term
 			for (int termPosition = 0; termPosition < terms.Length; termPosition++)
 			{
 				string term = terms[termPosition].term;
+
+                // Loop through each character of the string of the term
 				for (int counter = 0; counter < term.Length; counter++)
 				{
+                    // If the character is uppercase, marks start of a new element
 					if (char.IsUpper(term, counter))
 					{
-						if (counter + 1 < term.Length && char.IsLower(term, counter + 1))
+                        // Check if next character is also a letter, then it is a 2 letter element
+                        // Ensure that the next letter is still within the limits of the string
+                        if (counter + 1 < term.Length && char.IsLower(term, counter + 1))
 						{
+                            // Calculate the coefficient of the element by starting with a 0
 							string coefficient = "0";
 							int position = counter + 2;
+                            // Continue adding on numbers
 							while (position < term.Length && char.IsNumber(term.ElementAt(position)))
 							{
+                                // Add each digit onto the coefficient string
 								coefficient += term.ElementAt(position);
+
+                                // Move onto the next character
 								position++;
 							}
+
+                            // Add a new element with the calculated coefficient, element symbol and use the position of the term as the position for the element
 							elements.Add(new ElementTerm(int.Parse(coefficient), term.Substring(counter, 2), termPosition));
-							counter = position - 1;
+
+
+                            counter = position - 1;
 						}
+                        // else the element is only one letter long
 						else
 						{
 							string coefficient = "0";
@@ -130,7 +151,7 @@ namespace Balancing_Chemical_Equations
 								position++;
 							}
 							elements.Add(new ElementTerm(int.Parse(coefficient), term.Substring(counter, 1), termPosition));
-							counter = position - 1;
+                            counter = position;
 						}
 					}
 				}
