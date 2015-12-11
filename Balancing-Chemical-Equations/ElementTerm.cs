@@ -19,6 +19,11 @@ namespace Balancing_Chemical_Equations
 			this.Position = Position;
 		}
 
+        public ElementTerm(string Element)
+        {
+            this.Element = Element;
+        }
+
         public override string ToString()
         {
 			string coefficient = "";
@@ -28,6 +33,11 @@ namespace Balancing_Chemical_Equations
 			}
 
 			return Element + coefficient;
+        }
+
+        public override bool Equals(ElementTerm elementTerm)
+        {
+            return Element == elementTerm.Element;
         }
 	}
 }

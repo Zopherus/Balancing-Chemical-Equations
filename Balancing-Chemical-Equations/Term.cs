@@ -10,10 +10,11 @@ namespace Balancing_Chemical_Equations
 	{
 		public string term { get; private set; }
 		public int Position { get; private set; }
-
+        public List<ElementTerm> Elements { get; private set; }
 
 		public Term(string term, int Position)
 		{
+            Elements = new List<ElementTerm>();
 			this.term = term;
 			this.Position = Position;
 		}

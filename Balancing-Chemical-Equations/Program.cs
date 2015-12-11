@@ -30,19 +30,21 @@ namespace Balancing_Chemical_Equations
             string[] uniqueElements = FindUniqueElements(leftSide, rightSide);
 
 
-			double[,] equationMatrix = new double[uniqueElements.Length , leftSideElements.Count() + rightSideElements.Count() + 1];
+			double[,] equationMatrix = new double[uniqueElements.Length , leftSideTerms.Count() + rightSideTerms.Count() + 1];
 
 			for (int y = 0; y < equationMatrix.GetLength(0); y++)
 			{
 				for (int x = 0; x < equationMatrix.GetLength(1) - 1; x++)
 				{
-					if (x < leftSideElements.Count())
+					if (x < leftSideTerms.Count())
                     {
-						equationMatrix[y, x] = leftSideElements[x].Coefficient;
+                        if (leftSideTerms[x].Elements.Contains(new ElementTerm(uniqueElements[y])))
+                            equationMatrix[y, x] = leftSideTerms[x].Elements.Find(i => i.Element == uniqueElements[y]).Coefficient;
                     }
                     else
                     {
-						equationMatrix[y, x] = -rightSideElements[x - leftSideElements.Count()].Coefficient;
+                        if (rightSideTerms[x - leftSideTerms.Count()].Elements.Contains(new ElementTerm(uniqueElements[y])))
+                            equationMatrix[y, x] = -rightSideTerms[x - leftSideTerms.Count()].Elements.Find(i => i.Element == uniqueElements[y]).Coefficient;
                     }
 				}
 			}
@@ -136,6 +138,7 @@ namespace Balancing_Chemical_Equations
                             // Add a new element with the calculated coefficient, element symbol and use the position of the term as the position for the element
 							ElementTerm elementAdd = new ElementTerm(int.Parse(coefficient), term.Substring(counter, 2), termPosition);
 							elements.Add(elementAdd);
+                            terms[termPosition].Elements.Add(elementAdd);
 
 							// Make the next character to check, the position after all the numbers
 							// Need to decrease by one since for loop will increment counter by 1
@@ -160,10 +163,11 @@ namespace Balancing_Chemical_Equations
 							// Add a new element with the calculated coefficient, element symbol and use the position of the term as the position for the element
 							ElementTerm elementAdd = new ElementTerm(int.Parse(coefficient), term.Substring(counter, 1), termPosition);
 							elements.Add(elementAdd);
+                            terms[termPosition].Elements.Add(elementAdd);
 
 							// Make the next character to check, the position after all the numbers
 							// Need to decrease by one since for loop will increment counter by 1
-							counter = position;
+							counter = position - 1;
 						}
 					}
 				}
