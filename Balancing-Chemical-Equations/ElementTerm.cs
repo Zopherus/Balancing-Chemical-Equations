@@ -35,7 +35,22 @@ namespace Balancing_Chemical_Equations
 			return Element + coefficient;
         }
 
-        public override bool Equals(ElementTerm elementTerm)
+		public override bool Equals(object obj)
+		{
+			if (obj == null)
+				return false;
+
+			//If parameter cannot be cast to Rectangle return false
+			ElementTerm elementTerm = (ElementTerm)obj;
+			if ((Object)elementTerm == null)
+				return false;
+
+			//Return true if the two rectangles match
+			return Element == elementTerm.Element;
+		}
+
+
+        public bool Equals(ElementTerm elementTerm)
         {
             return Element == elementTerm.Element;
         }

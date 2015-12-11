@@ -49,10 +49,13 @@ namespace Balancing_Chemical_Equations
 				}
 			}
 
-            //ReducedRowEchelonForm(equationMatrix);
+            ReducedRowEchelonForm(equationMatrix);
+
 
             return ToString(equationMatrix);
         }
+
+
 
         static string[] FindUniqueElements(string leftSide, string rightSide)
         {
@@ -136,6 +139,8 @@ namespace Balancing_Chemical_Equations
 							}
 
                             // Add a new element with the calculated coefficient, element symbol and use the position of the term as the position for the element
+							if (coefficient == "0")
+								coefficient = "1";
 							ElementTerm elementAdd = new ElementTerm(int.Parse(coefficient), term.Substring(counter, 2), termPosition);
 							elements.Add(elementAdd);
                             terms[termPosition].Elements.Add(elementAdd);
@@ -159,6 +164,9 @@ namespace Balancing_Chemical_Equations
 								// Move onto the next character
 								position++;
 							}
+
+							if (coefficient == "0")
+								coefficient = "1";
 
 							// Add a new element with the calculated coefficient, element symbol and use the position of the term as the position for the element
 							ElementTerm elementAdd = new ElementTerm(int.Parse(coefficient), term.Substring(counter, 1), termPosition);
