@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Balancing_Chemical_Equations
-//https://www.reddit.com/r/dailyprogrammer/comments/3oz82g/20151016_challenge_236_hard_balancing_chemical/
+// https://www.reddit.com/r/dailyprogrammer/comments/3oz82g/20151016_challenge_236_hard_balancing_chemical/
+// https://gist.github.com/eliezercabrera/a25424428b7a8b61632e
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(BalanceChemicalEquation("C5H12 + O2 -> CO2 + H2O"));
+            Console.WriteLine(BalanceChemicalEquation("H2CO3 -> H2O + CO2"));
             Console.ReadLine();
         }
 
@@ -30,11 +31,12 @@ namespace Balancing_Chemical_Equations
             string[] uniqueElements = FindUniqueElements(leftSide, rightSide);
 
 
-			double[,] equationMatrix = new double[uniqueElements.Length , leftSideTerms.Count() + rightSideTerms.Count() + 1];
+            //Excluding the furthest right column of 0's, not sure if will make difference
+			double[,] equationMatrix = new double[uniqueElements.Length , leftSideTerms.Count() + rightSideTerms.Count()];
 
 			for (int y = 0; y < equationMatrix.GetLength(0); y++)
 			{
-				for (int x = 0; x < equationMatrix.GetLength(1) - 1; x++)
+				for (int x = 0; x < equationMatrix.GetLength(1); x++)
 				{
 					if (x < leftSideTerms.Count())
                     {
@@ -51,11 +53,66 @@ namespace Balancing_Chemical_Equations
 
             ReducedRowEchelonForm(equationMatrix);
 
+            List<Fraction> fractions = new List<Fraction>();
 
-            return ToString(equationMatrix);
+            for (int counter = 0; counter < equationMatrix.GetLength(0); counter++)
+            {
+                fractions.Add(new Fraction(equationMatrix[counter, equationMatrix.GetLength(1) - 1]));
+            }
+
+            List<int> denominators = new List<int>();
+            for (int counter = 0; counter < fractions.Count; counter++ )
+            {
+                denominators.Add(fractions[counter].Denominator);
+            }
+
+            int LeastCommonDenominator = LCM(denominators);
+
+            for (int counter = 0; counter < fractions.Count; counter++ )
+            {
+                if (counter < leftSideTerms.Length)
+                {
+                    leftSideTerms[counter].Coefficient = Math.Abs(fractions[counter].Numerator * (LeastCommonDenominator / fractions[counter].Denominator));
+                }
+                else
+                {
+                    rightSideTerms[counter - leftSideTerms.Length].Coefficient = Math.Abs(fractions[counter].Numerator * (LeastCommonDenominator / fractions[counter].Denominator));
+                }
+            }
+
+            rightSideTerms[rightSideTerms.Length - 1].Coefficient = LeastCommonDenominator;
+
+            return fractions[0].ToString();
+            //return string.Join(" + ", (Object[])leftSideTerms) + " -> " + string.Join(" + ", (Object[])rightSideTerms);
         }
 
+        static int LCM(List<int> numbers)
+        {
+            int result = 1;
+            foreach (int number in numbers)
+            {
+                result = LCM(result, number);
+            }
+            return result;
+        }
 
+        static int LCM(int num1, int num2)
+        {
+            int x = num1;
+            int y = num2;
+            while (num1 != num2)
+            {
+                if (num1 > num2)
+                {
+                    num1 -= num2;
+                }
+                else
+                {
+                    num2 -= num1;
+                }
+            }
+            return (x * y) / num1;
+        }
 
         static string[] FindUniqueElements(string leftSide, string rightSide)
         {
@@ -129,10 +186,10 @@ namespace Balancing_Chemical_Equations
 							string coefficient = "0";
 							int position = counter + 2;
                             // While the next character is a number and haven't hit end of string yet
-							while (position < term.Length && char.IsNumber(term.ElementAt(position)))
+							while (position < term.Length && char.IsNumber(term[position]))
 							{
                                 // Add each digit onto the coefficient string
-								coefficient += term.ElementAt(position);
+								coefficient += term[position];
 
                                 // Move onto the next character
 								position++;
@@ -156,10 +213,10 @@ namespace Balancing_Chemical_Equations
 							string coefficient = "0";
 							int position = counter + 1;
 							// While the next character is a number and haven't hit end of string yet
-							while (position < term.Length && char.IsNumber(term.ElementAt(position)))
+							while (position < term.Length && char.IsNumber(term[position]))
 							{
 								// Add each digit onto the coefficient string
-								coefficient += term.ElementAt(position);
+								coefficient += term[position];
 
 								// Move onto the next character
 								position++;
@@ -190,13 +247,13 @@ namespace Balancing_Chemical_Equations
 			string nextTerm = "";
 			for (int counter = 0; counter < equation.Length; counter++)
 			{
-				if (equation.ElementAt(counter) == '+')
+				if (equation[counter] == '+')
 				{
 					terms.Add(nextTerm.Trim());
 					nextTerm= "";
 				}
 				else
-					nextTerm += equation.ElementAt(counter);
+					nextTerm += equation[counter];
 			}
 			terms.Add(nextTerm.Trim());
 			return terms;

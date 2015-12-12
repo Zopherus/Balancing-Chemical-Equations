@@ -8,6 +8,7 @@ namespace Balancing_Chemical_Equations
 {
 	class Term
 	{
+        public int Coefficient { get; set; }
 		public string term { get; private set; }
 		public int Position { get; private set; }
         public List<ElementTerm> Elements { get; private set; }
@@ -21,7 +22,12 @@ namespace Balancing_Chemical_Equations
 
 		public override string ToString()
 		{
-			return term;
+            string coefficient = "";
+            if (Coefficient != 1)
+            {
+                coefficient = Coefficient.ToString();
+            }
+			return coefficient + term;
 		}
 	}
 }

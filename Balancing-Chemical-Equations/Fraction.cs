@@ -11,6 +11,12 @@ namespace Balancing_Chemical_Equations
 		public int Numerator { get; private set; }
 		public int Denominator { get; private set; }
 
+        public Fraction(int Numerator, int Denominator)
+        {
+            this.Numerator = Numerator;
+            this.Denominator = Denominator;
+        }
+
 		public Fraction(double Decimal)
 		{
 			Fraction fraction = DecimalToFraction(Decimal);
@@ -18,40 +24,43 @@ namespace Balancing_Chemical_Equations
 			this.Denominator = fraction.Denominator;
 		}
 
-		public Fraction DecimalToFraction(double Decimal)
+		public static Fraction DecimalToFraction(double number)
 		{
-			double error = Double.Epsilon;
-			int WholePart = (int)Math.Floor(Decimal);
-			double FractionalPart = Decimal - WholePart;
+            double error = 0.01;
+            int sign = Math.Sign(number);
+            number *= sign;
+			int wholePart = (int)Math.Floor(number);
+			double fractionalPart = number - wholePart;
 
-			int lowNum = 0;
-			int lowDen = 1;
+			int lowerNum = 0;
+			int lowerDen = 1;
 
-			int topNum = 1;
-			int topDen = 1;
+			int upperNum = 1;
+			int upperDen = 1;
 
 
-			while (true)
+		    while (true)
 			{
-				int middleNum = (lowNum + topNum) / 2;
-				int middleDen = (lowDen + topDen) / 2;
-				if (middleDen * (FractionalPart + error) < middleNum)
-				{
-
-				}
-				else if (middleNum < (FractionalPart - error) * middleDen)
-				{
-				}
-				else
-				{
-					return 
-				}
+                int middleNum = (lowerNum + upperNum);
+				int middleDen = (lowerDen + upperDen);
+                if (middleDen * (fractionalPart + error) < middleNum)
+                {
+                    upperNum = middleNum;
+                    upperDen = middleDen;
+                }
+                else if (middleNum < (fractionalPart - error) * middleDen)
+                {
+                    lowerNum = middleNum;
+                    lowerDen = middleDen;
+                }
+                else
+                    return new Fraction((wholePart * middleDen + middleNum) * sign, middleDen);
 			}
 		}
 
-		public static Fraction operator + (Fraction fraction1, Fraction Fraction2)
-		{
-			return ur_mum;
-		}
+        public override string ToString()
+        {
+            return Numerator.ToString() + "/" + Denominator.ToString();
+        }
 	}
 }
