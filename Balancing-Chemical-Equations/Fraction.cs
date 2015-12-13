@@ -32,6 +32,9 @@ namespace Balancing_Chemical_Equations
 			int wholePart = (int)Math.Floor(number);
 			double fractionalPart = number - wholePart;
 
+            if (fractionalPart == 0)
+                return new Fraction(wholePart, 1);
+
 			int lowerNum = 0;
 			int lowerDen = 1;
 

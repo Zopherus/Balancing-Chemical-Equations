@@ -12,7 +12,10 @@ namespace Balancing_Chemical_Equations
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(BalanceChemicalEquation("H2CO3 -> H2O + CO2"));
+            //Console.WriteLine(BalanceChemicalEquation("C6H12O6 + O2 -> H2O + CO2"));
+            string equation = Console.ReadLine();
+            //Console.WriteLine(BalanceChemicalEquation("C5H12 + O2 -> CO2 + H2O"));
+            Console.WriteLine(BalanceChemicalEquation(equation));
             Console.ReadLine();
         }
 
@@ -82,8 +85,8 @@ namespace Balancing_Chemical_Equations
 
             rightSideTerms[rightSideTerms.Length - 1].Coefficient = LeastCommonDenominator;
 
-            return fractions[0].ToString();
-            //return string.Join(" + ", (Object[])leftSideTerms) + " -> " + string.Join(" + ", (Object[])rightSideTerms);
+            //return fractions[0].ToString();
+            return string.Join(" + ", (Object[])leftSideTerms) + " -> " + string.Join(" + ", (Object[])rightSideTerms);
         }
 
         static int LCM(List<int> numbers)
