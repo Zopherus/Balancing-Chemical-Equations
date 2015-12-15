@@ -26,14 +26,19 @@ namespace Balancing_Chemical_Equations
 
 		public static Fraction DecimalToFraction(double number)
 		{
-            double error = 0.01;
+			int decimalPlaceError = 8;
+			double error = Math.Pow(10, -decimalPlaceError);
             int sign = Math.Sign(number);
             number *= sign;
+			number = Math.Round(number, decimalPlaceError);
 			int wholePart = (int)Math.Floor(number);
 			double fractionalPart = number - wholePart;
 
             if (fractionalPart == 0)
                 return new Fraction(wholePart, 1);
+
+			if (fractionalPart == 1)
+				return new Fraction(wholePart + 1, 1);
 
 			int lowerNum = 0;
 			int lowerDen = 1;
@@ -51,7 +56,7 @@ namespace Balancing_Chemical_Equations
                     upperNum = middleNum;
                     upperDen = middleDen;
                 }
-                else if (middleNum < (fractionalPart - error) * middleDen)
+                else if (middleNum <= (fractionalPart - error) * middleDen)
                 {
                     lowerNum = middleNum;
                     lowerDen = middleDen;

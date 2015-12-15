@@ -22,6 +22,8 @@ namespace Balancing_Chemical_Equations
 
 		public override string ToString()
 		{
+			/*if (Coefficient == 0)
+				return "0";*/
             string coefficient = "";
             if (Coefficient != 1)
             {

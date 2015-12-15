@@ -13,9 +13,9 @@ namespace Balancing_Chemical_Equations
         static void Main(string[] args)
         {
             //Console.WriteLine(BalanceChemicalEquation("C6H12O6 + O2 -> H2O + CO2"));
-            string equation = Console.ReadLine();
-            //Console.WriteLine(BalanceChemicalEquation("C5H12 + O2 -> CO2 + H2O"));
-            Console.WriteLine(BalanceChemicalEquation(equation));
+            //string equation = Console.ReadLine();
+			Console.WriteLine(BalanceChemicalEquation("HOZn -> HOZn"));
+            //Console.WriteLine(BalanceChemicalEquation(equation));
             Console.ReadLine();
         }
 
@@ -32,7 +32,8 @@ namespace Balancing_Chemical_Equations
             ElementTerm[] rightSideElements = FindElements(rightSideTerms);
 
             string[] uniqueElements = FindUniqueElements(leftSide, rightSide);
-
+			if (uniqueElements == null)
+				return "Do you even alchemy bro";
 
             //Excluding the furthest right column of 0's, not sure if will make difference
 			double[,] equationMatrix = new double[uniqueElements.Length , leftSideTerms.Count() + rightSideTerms.Count()];
@@ -55,12 +56,15 @@ namespace Balancing_Chemical_Equations
 			}
 
             ReducedRowEchelonForm(equationMatrix);
-
+			Console.WriteLine(ToString(equationMatrix));
             List<Fraction> fractions = new List<Fraction>();
 
             for (int counter = 0; counter < equationMatrix.GetLength(0); counter++)
             {
-                fractions.Add(new Fraction(equationMatrix[counter, equationMatrix.GetLength(1) - 1]));
+				if (IsRowZero(equationMatrix, counter))
+					fractions.Add(new Fraction(0, 1));
+				else
+					fractions.Add(new Fraction(equationMatrix[counter, equationMatrix.GetLength(1) - 1]));
             }
 
             List<int> denominators = new List<int>();
@@ -75,19 +79,22 @@ namespace Balancing_Chemical_Equations
             {
                 if (counter < leftSideTerms.Length)
                 {
-                    leftSideTerms[counter].Coefficient = Math.Abs(fractions[counter].Numerator * (LeastCommonDenominator / fractions[counter].Denominator));
+					leftSideTerms[counter].Coefficient = Math.Abs(fractions[counter].Numerator * (LeastCommonDenominator / fractions[counter].Denominator));
                 }
                 else
                 {
                     rightSideTerms[counter - leftSideTerms.Length].Coefficient = Math.Abs(fractions[counter].Numerator * (LeastCommonDenominator / fractions[counter].Denominator));
                 }
             }
+			if (equationMatrix.GetLength(0) == equationMatrix.GetLength(1) && LeastCommonDenominator == 1)
+				rightSideTerms[rightSideTerms.Length - 1].Coefficient = 0;
+			else
+				rightSideTerms[rightSideTerms.Length - 1].Coefficient = LeastCommonDenominator;
 
-            rightSideTerms[rightSideTerms.Length - 1].Coefficient = LeastCommonDenominator;
-
-            //return fractions[0].ToString();
+            //return fractions[1].ToString();
             return string.Join(" + ", (Object[])leftSideTerms) + " -> " + string.Join(" + ", (Object[])rightSideTerms);
-        }
+			//return ToString(equationMatrix);
+		}
 
         static int LCM(List<int> numbers)
         {
@@ -150,6 +157,19 @@ namespace Balancing_Chemical_Equations
             else
                 return null;
         }
+
+		//
+		//Returns true if the whole row is zero except for the last element
+		static bool IsRowZero(double[,] matrix, int row)
+		{
+			bool result = true;
+			for (int counter = 0; counter < matrix.GetLength(1) - 1; counter++)
+			{
+				if (matrix[row, counter] != 0)
+					result = false;
+			}
+			return result;
+		}
 
 		static Term[] FindTerms(string equation)
 		{
