@@ -13,9 +13,9 @@ namespace Balancing_Chemical_Equations
         static void Main(string[] args)
         {
             //Console.WriteLine(BalanceChemicalEquation("C6H12O6 + O2 -> H2O + CO2"));
-            //string equation = Console.ReadLine();
-			Console.WriteLine(BalanceChemicalEquation("HOZn -> HOZn"));
-            //Console.WriteLine(BalanceChemicalEquation(equation));
+			//Console.WriteLine(BalanceChemicalEquation("HOZn -> HOZn"));
+			//Console.WriteLine(BalanceChemicalEquation("O2 -> O3"));
+			Console.WriteLine(BalanceChemicalEquation("H3BO3 + Na2CO3 -> Na2B4O7 + CO2 + H2O"));
             Console.ReadLine();
         }
 
@@ -25,32 +25,32 @@ namespace Balancing_Chemical_Equations
             string leftSide = equation.Substring(0, middle - 1);
             string rightSide = equation.Substring(middle + 3, equation.Length - middle - 3);
 
-			Term[] leftSideTerms = FindTerms(leftSide);
-			Term[] rightSideTerms = FindTerms(rightSide);
+			Compound[] leftSideCompounds = FindCompounds(leftSide);
+			Compound[] rightSideCompounds = FindCompounds(rightSide);
 
-			ElementTerm[] leftSideElements = FindElements(leftSideTerms);
-            ElementTerm[] rightSideElements = FindElements(rightSideTerms);
+			ElementTerm[] leftSideElements = FindElements(leftSideCompounds);
+            ElementTerm[] rightSideElements = FindElements(rightSideCompounds);
 
             string[] uniqueElements = FindUniqueElements(leftSide, rightSide);
 			if (uniqueElements == null)
-				return "Do you even alchemy bro";
+				return null;
 
             //Excluding the furthest right column of 0's, not sure if will make difference
-			double[,] equationMatrix = new double[uniqueElements.Length , leftSideTerms.Count() + rightSideTerms.Count()];
+			double[,] equationMatrix = new double[uniqueElements.Length , leftSideCompounds.Count() + rightSideCompounds.Count()];
 
 			for (int y = 0; y < equationMatrix.GetLength(0); y++)
 			{
 				for (int x = 0; x < equationMatrix.GetLength(1); x++)
 				{
-					if (x < leftSideTerms.Count())
+					if (x < leftSideCompounds.Count())
                     {
-                        if (leftSideTerms[x].Elements.Contains(new ElementTerm(uniqueElements[y])))
-                            equationMatrix[y, x] = leftSideTerms[x].Elements.Find(i => i.Element == uniqueElements[y]).Coefficient;
+                        if (leftSideCompounds[x].Elements.Contains(new ElementTerm(uniqueElements[y])))
+                            equationMatrix[y, x] = leftSideCompounds[x].Elements.Find(i => i.Element == uniqueElements[y]).Coefficient;
                     }
                     else
                     {
-                        if (rightSideTerms[x - leftSideTerms.Count()].Elements.Contains(new ElementTerm(uniqueElements[y])))
-                            equationMatrix[y, x] = -rightSideTerms[x - leftSideTerms.Count()].Elements.Find(i => i.Element == uniqueElements[y]).Coefficient;
+                        if (rightSideCompounds[x - leftSideCompounds.Count()].Elements.Contains(new ElementTerm(uniqueElements[y])))
+                            equationMatrix[y, x] = -rightSideCompounds[x - leftSideCompounds.Count()].Elements.Find(i => i.Element == uniqueElements[y]).Coefficient;
                     }
 				}
 			}
@@ -77,22 +77,22 @@ namespace Balancing_Chemical_Equations
 
             for (int counter = 0; counter < fractions.Count; counter++ )
             {
-                if (counter < leftSideTerms.Length)
+                if (counter < leftSideCompounds.Length)
                 {
-					leftSideTerms[counter].Coefficient = Math.Abs(fractions[counter].Numerator * (LeastCommonDenominator / fractions[counter].Denominator));
+					leftSideCompounds[counter].Coefficient = Math.Abs(fractions[counter].Numerator * (LeastCommonDenominator / fractions[counter].Denominator));
                 }
                 else
                 {
-                    rightSideTerms[counter - leftSideTerms.Length].Coefficient = Math.Abs(fractions[counter].Numerator * (LeastCommonDenominator / fractions[counter].Denominator));
+                    rightSideCompounds[counter - leftSideCompounds.Length].Coefficient = Math.Abs(fractions[counter].Numerator * (LeastCommonDenominator / fractions[counter].Denominator));
                 }
             }
 			if (equationMatrix.GetLength(0) == equationMatrix.GetLength(1) && LeastCommonDenominator == 1)
-				rightSideTerms[rightSideTerms.Length - 1].Coefficient = 0;
+				rightSideCompounds[rightSideCompounds.Length - 1].Coefficient = 0;
 			else
-				rightSideTerms[rightSideTerms.Length - 1].Coefficient = LeastCommonDenominator;
+				rightSideCompounds[rightSideCompounds.Length - 1].Coefficient = LeastCommonDenominator;
 
             //return fractions[1].ToString();
-            return string.Join(" + ", (Object[])leftSideTerms) + " -> " + string.Join(" + ", (Object[])rightSideTerms);
+            return string.Join(" + ", (Object[])leftSideCompounds) + " -> " + string.Join(" + ", (Object[])rightSideCompounds);
 			//return ToString(equationMatrix);
 		}
 
@@ -171,18 +171,18 @@ namespace Balancing_Chemical_Equations
 			return result;
 		}
 
-		static Term[] FindTerms(string equation)
+		static Compound[] FindCompounds(string equation)
 		{
 			string[] terms = equation.Split('+');
-			List<Term> termList = new List<Term>();
+			List<Compound> termList = new List<Compound>();
 			for (int counter = 0; counter < terms.Length; counter++)
 			{
-				termList.Add(new Term(terms[counter].Trim(), counter));
+				termList.Add(new Compound(terms[counter].Trim(), counter));
 			}
 			return termList.ToArray();
 		}
 
-		static ElementTerm[] FindElements(Term[] terms)
+		static ElementTerm[] FindElements(Compound[] terms)
 		{
             // I actually do not know how this works or how I wrote it, but it works so
             // Let's figure out how this works
